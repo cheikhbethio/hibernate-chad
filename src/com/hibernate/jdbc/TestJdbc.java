@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 public class TestJdbc {
 
 	public static void main(String[] args) {
-		String jdbcUrl = "jdbc:mysql://localhost:9998/hb_student_tracker?useSSL=false";
+		String jdbcUrl = "jdbc:mysql://localhost:9998/hb-01-one-to-one-uni?useSSL=false";
 		String user= "hbstudent";
 		String pass= "hbstudent";
 		try {
