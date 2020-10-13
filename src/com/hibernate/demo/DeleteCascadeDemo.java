@@ -6,7 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-public class CreateDemo {
+public class DeleteCascadeDemo {
 
 	public static void main(String[] args) {
 
@@ -20,24 +20,33 @@ public class CreateDemo {
 		// create session
 		Session session = factory.getCurrentSession();
 		
-		try {			
+		try {
+			
 			// create an instructor object
 			InstructorDetail instDetail = new InstructorDetail("youtubAdmoin", "foot and philo");
-			Instructor inst = new Instructor("moussa", "sow", "m.sow@jj.fr");		
+			Instructor inst = new Instructor("inst", "bi direction", "toDelete@purge.fr");		
 			inst.setInstructorDetail(instDetail);
-			
-			// start a transaction
+			session = factory.getCurrentSession();
 			session.beginTransaction();
-			
-			// saving inst and inst detail in 2 diff tables
+			session.createQuery("delete from Instructor").executeUpdate();
+			session.createQuery("delete from InstructorDetail").executeUpdate();
 			session.save(inst);
+			session.getTransaction().commit();
+			System.out.println("Creation Done!");
 			
-			// commit transaction
+			// getting object to delete
+			session = factory.getCurrentSession();
+			session.beginTransaction();
+			InstructorDetail tempDetail = session.get(InstructorDetail.class, instDetail.getId());
+			System.out.println("++++++++ => " + tempDetail.getInstructor());
 			session.getTransaction().commit();
 			
-			System.out.println("Done!");
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		finally {
+			session.close();
 			factory.close();
 		}
 	}
