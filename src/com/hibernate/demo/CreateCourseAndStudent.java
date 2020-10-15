@@ -3,12 +3,13 @@ import com.hibernate.demo.entity.Course;
 import com.hibernate.demo.entity.Instructor;
 import com.hibernate.demo.entity.InstructorDetail;
 import com.hibernate.demo.entity.Review;
+import com.hibernate.demo.entity.Student;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-public class DeleteCourseAndReviews {
+public class CreateCourseAndStudent {
 
 	public static void main(String[] args) {
 
@@ -19,38 +20,27 @@ public class DeleteCourseAndReviews {
 				.addAnnotatedClass(InstructorDetail.class)
 				.addAnnotatedClass(Course.class)
 				.addAnnotatedClass(Review.class)
+				.addAnnotatedClass(Student.class)
 				.buildSessionFactory();
 		
 		// create session
 		Session session = factory.getCurrentSession();
 		
 		try {
-			
-			Course course = new Course("learn hibernate ");
-			
-			Review r1 = new Review("by moussa");
-			Review r2 = new Review("by mbs");
-			Review r3 = new Review("by fatou");
-			
-			course.addReview(r1);
-			course.addReview(r2);
-			course.addReview(r3);
+			Student st = new Student("moussa", "sow", "many 2 many");
+			Course cr1 = new Course("poudre de ppp2");
+			Course cr2 = new Course("chez l'agro");
 			
 			session = factory.getCurrentSession();
 			session.beginTransaction();
-			session.createQuery("delete from Review").executeUpdate();
-			session.createQuery("delete from Course").executeUpdate();
-			session.save(course);
-			
-			session.getTransaction().commit();
-			System.out.println("Creation Done!");
-				
 
-			session = factory.getCurrentSession();
-			session.beginTransaction();
-			Course theCourse = session.get(Course.class, course.getId());
-			session.delete(theCourse);
-			session.getTransaction().commit();
+			session.save(st);
+			cr1.addStudent(st);
+			cr2.addStudent(st);
+			session.save(cr1);
+			session.save(cr2);
+			
+			session.getTransaction().commit();			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -62,12 +52,3 @@ public class DeleteCourseAndReviews {
 	}
 
 }
-
-
-
-
-
-
-
-
-
